@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fact Popups</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+        }
+        .loading-screen, .popup, .error-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+        .loading-screen {
+            display: flex;
+            font-size: 24px;
+        }
+        .popup, .error-popup {
+            display: none;
+            flex-direction: column;
+            text-align: center;
+        }
+        /* Popup styling to resemble a square error box */
+        .popup-content, .error-content {
+            background-color: white;
+            color: black;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px; /* Square appearance */
+            height: 300px; /* Square appearance */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0px 0px 15px rgba(0,0,0,0.3);
+        }
+        .popup-buttons, .error-buttons {
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .close-button {
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .proceed-button {
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Loading Screen -->
+<div class="loading-screen" id="loadingScreen">
+    Loading... <span id="countdown">3</span>
+</div>
+
+<!-- Fact Popups -->
+<div class="popup" id="popup">
+    <div class="popup-content" id="popupContent">
+        <!-- Fact will be injected here -->
+    </div>
+    <div class="popup-buttons">
+        <button class="close-button" id="closeButton">Close</button>
+        <button class="proceed-button" id="proceedButton">Proceed</button>
+    </div>
+</div>
+
+<!-- Error Popup -->
+<div class="error-popup" id="errorPopup">
+    <div class="error-content">
+        Error: You must first read all the pop-ups in order to close this website.
+        <div class="error-buttons">
+            <button class="proceed-button" id="errorProceedButton">OK</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Fact data: 15 facts
+    const facts = [
+        "Fact 1: 46% of teens are online almost constantly, leading to social media addiction.",
+        "Fact 2: Social media increases anxiety and depression among teens.",
+        "Fact 3: Social media disrupts sleep patterns in over 30% of adolescents.",
+        "Fact 4: Body dissatisfaction in teenage girls is worsened by social media.",
+        "Fact 5: Algorithms amplify harmful content, leading to more mental health issues.",
+        "Fact 6: 70% of child abuse cases involve online interactions.",
+        "Fact 7: Sextortion cases have been increasing due to online threats.",
+        "Fact 8: 40% of children aged 8-12 are exposed to sexual content online.",
+        "Fact 9: Predators use social media to target vulnerable teens.",
+        "Fact 10: Social media desensitizes teens to violence and suffering.",
+        "Fact 11: Adolescents report feeling isolated despite 'connected' platforms.",
+        "Fact 12: Increased online time correlates with poor sleep and mental health issues.",
+        "Fact 13: 1 in 3 teenage girls have worsened body image due to social media.",
+        "Fact 14: Non-consensual sharing of private images leads to exploitation.",
+        "Fact 15: Online harassment has become rampant, especially for girls and LGBTQ teens."
+    ];
+
+    let currentFact = 0;
+
+    // Elements
+    const loadingScreen = document.getElementById('loadingScreen');
+    const countdown = document.getElementById('countdown');
+    const popup = document.getElementById('popup');
+    const popupContent = document.getElementById('popupContent');
+    const closeButton = document.getElementById('closeButton');
+    const proceedButton = document.getElementById('proceedButton');
+    const errorPopup = document.getElementById('errorPopup');
+    const errorProceedButton = document.getElementById('errorProceedButton');
+
+    // Loading countdown
+    let timer = 3;
+    const countdownInterval = setInterval(() => {
+        timer--;
+        countdown.textContent = timer;
+        if (timer === 0) {
+            clearInterval(countdownInterval);
+            loadingScreen.style.display = 'none';
+            showPopup();
+        }
+    }, 1000);
+
+    // Show popup with fact
+    function showPopup() {
+        if (currentFact < facts.length) {
+            popupContent.textContent = facts[currentFact];
+            popup.style.display = 'flex';
+        } else {
+            popup.style.display = 'none';  // Hide when all facts are done
+            alert("You've finished all the facts!");
+        }
+    }
+
+    // Proceed to next fact
+    proceedButton.addEventListener('click', () => {
+        popup.style.display = 'none';
+        currentFact++;
+        showPopup();
+    });
+
+    // Close button logic (shows error)
+    closeButton.addEventListener('click', () => {
+        popup.style.display = 'none';
+        errorPopup.style.display = 'flex';
+    });
+
+    // Error proceed button to return to fact popup
+    errorProceedButton.addEventListener('click', () => {
+        errorPopup.style.display = 'none';
+        popup.style.display = 'flex';
+    });
+</script>
+
+</body>
+</html>
